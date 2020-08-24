@@ -46,7 +46,7 @@ let firstNum = "";
 let secondNum = "";
 let operator;
 let output;
-// put number selected on the display
+let decimalCount = 0;
 function calculatorDisplay(value) {
   function getData(value) {
     if (
@@ -104,13 +104,30 @@ function calculatorDisplay(value) {
       getData("9");
       break;
     case "decimal":
-      getData(".");
+      if (decimalCount === 0) {
+        getData(".");
+        decimalCount++;
+      }
       break;
     case "clear":
       display.innerHTML = "";
       firstNum = "";
       secondNum = "";
       operator = undefined;
+      decimalCount = 0;
+      break;
+    case "undo":
+      display.innerHTML = display.innerHTML.slice(0, -1);
+      if (
+        operator === "subtract" ||
+        operator === "add" ||
+        operator === "multiply" ||
+        operator === "divide"
+      ) {
+        secondNum = secondNum.slice(0, -1);
+      } else {
+        firstNum = firstNum.slice(0, -1);
+      }
       break;
     case "minus":
       calculate(operator);
