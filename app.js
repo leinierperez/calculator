@@ -13,7 +13,7 @@ function multiply(a, b) {
 
 function divide(a, b) {
   if (b === 0) {
-    return `Can't divide by zero`;
+    return "ERROR";
   } else {
     return a / b;
   }
@@ -23,17 +23,13 @@ function divide(a, b) {
 function operate(operator, a, b) {
   switch (operator) {
     case "add":
-      add(a, b);
-      break;
+      return add(a, b);
     case "subtract":
-      subtract(a, b);
-      break;
+      return subtract(a, b);
     case "multiply":
-      multiply(a, b);
-      break;
+      return multiply(a, b);
     case "divide":
-      divide(a, b);
-      break;
+      return divide(a, b);
     default:
       console.log("Choose an Operator");
   }
@@ -42,16 +38,9 @@ function operate(operator, a, b) {
 const display = document.querySelector(".display");
 const btns = document.querySelectorAll("button");
 
-btns.forEach((button) => {
-  button.addEventListener("click", (e) => calculatorDisplay(button));
-});
-
-// Create the functions that populate the display when you click the number buttons…
-// you should be storing the ‘display value’ in a variable somewhere for use in the next step.
-
 // put number selected on the display
-function calculatorDisplay(value) {
-  switch (value) {
-    case "zero":
-  }
-}
+btns.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    display.innerHTML += button.innerText;
+  });
+});
