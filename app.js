@@ -45,64 +45,65 @@ btns.forEach((button) => {
 let firstNum = "";
 let secondNum = "";
 let operator;
+let output;
 // put number selected on the display
 function calculatorDisplay(value) {
   function getData(value) {
     if (
-      display.innerHTML.includes("-") ||
-      display.innerHTML.includes("+") ||
-      display.innerHTML.includes("x") ||
-      display.innerHTML.includes("÷")
+      operator === "subtract" ||
+      operator === "add" ||
+      operator === "multiply" ||
+      operator === "divide"
     ) {
       secondNum += value;
+      display.innerHTML = secondNum;
     } else {
       firstNum += value;
+      display.innerHTML = firstNum;
+    }
+  }
+
+  function calculate() {
+    if (secondNum) {
+      output = operate(operator, Number(firstNum), Number(secondNum));
+      display.innerHTML = output;
+      firstNum = output.toString();
+      secondNum = "";
     }
   }
 
   switch (value) {
     case "zero":
-      display.innerHTML += "0";
       getData("0");
       break;
     case "one":
-      display.innerHTML += "1";
       getData("1");
       break;
     case "two":
-      display.innerHTML += "2";
       getData("2");
       break;
     case "three":
-      display.innerHTML += "3";
       getData("3");
       break;
     case "four":
-      display.innerHTML += "4";
       getData("4");
       break;
     case "five":
-      display.innerHTML += "5";
       getData("5");
       break;
     case "six":
-      display.innerHTML += "6";
       getData("6");
       break;
     case "seven":
-      display.innerHTML += "7";
       getData("7");
       break;
     case "eight":
-      display.innerHTML += "8";
       getData("8");
       break;
     case "nine":
-      display.innerHTML += "9";
       getData("9");
       break;
     case "decimal":
-      display.innerHTML += ".";
       getData(".");
       break;
     case "clear":
@@ -112,29 +113,23 @@ function calculatorDisplay(value) {
       operator = undefined;
       break;
     case "minus":
-      display.innerHTML += "-";
+      calculate(operator);
       operator = "subtract";
       break;
     case "plus":
-      display.innerHTML += "+";
+      calculate(operator);
       operator = "add";
       break;
     case "times":
-      display.innerHTML += "x";
+      calculate(operator);
       operator = "multiply";
       break;
     case "divide":
-      display.innerHTML += "÷";
+      calculate(operator);
       operator = "divide";
       break;
     case "equals":
-      console.log(firstNum);
-      console.log(secondNum);
-      display.innerHTML = operate(
-        operator,
-        Number(firstNum),
-        Number(secondNum)
-      );
+      calculate();
       break;
   }
 }
