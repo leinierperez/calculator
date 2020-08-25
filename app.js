@@ -88,14 +88,22 @@ function calculatorDisplay(value) {
       operator === "multiply" ||
       operator === "divide"
     ) {
-      secondNum += value;
+      if (secondNum === "" && value === ".") {
+        secondNum += "0.";
+      } else {
+        secondNum += value;
+      }
       if (value === ".") {
         display.innerHTML = secondNum;
       } else {
         display.innerHTML = removeZeros(secondNum);
       }
     } else {
-      firstNum += value;
+      if (firstNum === "" && value === ".") {
+        firstNum += "0.";
+      } else {
+        firstNum += value;
+      }
       if (value === ".") {
         display.innerHTML = firstNum;
       } else {
