@@ -89,10 +89,9 @@ function calculatorDisplay(value) {
       operator === "divide"
     ) {
       if (secondNum === "" && value === ".") {
-        secondNum += "0.";
-      } else {
-        secondNum += value;
+        secondNum = "0";
       }
+      secondNum += value;
       if (value === ".") {
         display.innerHTML = secondNum;
       } else {
@@ -100,10 +99,9 @@ function calculatorDisplay(value) {
       }
     } else {
       if (firstNum === "" && value === ".") {
-        firstNum += "0.";
-      } else {
-        firstNum += value;
+        firstNum = "0";
       }
+      firstNum += value;
       if (value === ".") {
         display.innerHTML = firstNum;
       } else {
