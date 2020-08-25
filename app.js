@@ -42,11 +42,44 @@ btns.forEach((button) => {
   button.addEventListener("click", (e) => calculatorDisplay(button.id));
 });
 
+window.addEventListener("keydown", (e) => {
+  if (e.keyCode === 48) {
+    calculatorDisplay("zero");
+  } else if (e.keyCode === 49) {
+    calculatorDisplay("one");
+  } else if (e.keyCode === 50) {
+    calculatorDisplay("two");
+  } else if (e.keyCode === 51) {
+    calculatorDisplay("three");
+  } else if (e.keyCode === 52) {
+    calculatorDisplay("four");
+  } else if (e.keyCode === 53) {
+    calculatorDisplay("five");
+  } else if (e.keyCode === 54) {
+    calculatorDisplay("six");
+  } else if (e.keyCode === 55) {
+    calculatorDisplay("seven");
+  } else if (e.keyCode === 56) {
+    calculatorDisplay("eight");
+  } else if (e.keyCode === 57) {
+    calculatorDisplay("nine");
+  } else if (e.keyCode === 190) {
+    calculatorDisplay("decimal");
+  } else if (e.keyCode === 8) {
+    calculatorDisplay("undo");
+  }
+});
+
+function removeZeros(str) {
+  return Number(str).toString();
+}
+
 let firstNum = "";
 let secondNum = "";
 let operator;
 let output;
 let decimalCount = 0;
+
 function calculatorDisplay(value) {
   function getData(value) {
     if (
@@ -56,10 +89,18 @@ function calculatorDisplay(value) {
       operator === "divide"
     ) {
       secondNum += value;
-      display.innerHTML = secondNum;
+      if (value === ".") {
+        display.innerHTML = secondNum;
+      } else {
+        display.innerHTML = removeZeros(secondNum);
+      }
     } else {
       firstNum += value;
-      display.innerHTML = firstNum;
+      if (value === ".") {
+        display.innerHTML = firstNum;
+      } else {
+        display.innerHTML = removeZeros(firstNum);
+      }
     }
   }
 
@@ -70,6 +111,7 @@ function calculatorDisplay(value) {
       firstNum = output.toString();
       secondNum = "";
     }
+    decimalCount = 0;
   }
 
   switch (value) {
@@ -108,9 +150,10 @@ function calculatorDisplay(value) {
         getData(".");
         decimalCount++;
       }
+
       break;
     case "clear":
-      display.innerHTML = "";
+      display.innerHTML = "0";
       firstNum = "";
       secondNum = "";
       operator = undefined;
@@ -127,6 +170,9 @@ function calculatorDisplay(value) {
         secondNum = secondNum.slice(0, -1);
       } else {
         firstNum = firstNum.slice(0, -1);
+      }
+      if (display.innerHTML.endsWith(".")) {
+        decimalCount = 0;
       }
       break;
     case "minus":
