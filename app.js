@@ -1,4 +1,3 @@
-// add subtract multiply divide
 function add(a, b) {
   return a + b;
 }
@@ -12,11 +11,10 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-  if (b === 0) {
-    return "ERROR";
-  } else {
-    return a / b;
+  if (b === 0 || isNaN(b)) {
+    throw new Error("Divide by zero Error");
   }
+  return a / b;
 }
 
 //takes an operator and 2 numbers and then calls one of the above functions on the numbers.
@@ -36,38 +34,29 @@ function operate(operator, a, b) {
 }
 
 const display = document.querySelector(".display");
-const btns = document.querySelectorAll("button");
+const btns = document.querySelectorAll(".calculator button");
 
 btns.forEach((button) => {
-  button.addEventListener("click", (e) => calculatorDisplay(button.id));
+  button.addEventListener("click", (e) =>
+    calculatorDisplay(button.textContent)
+  );
 });
 
+const keyCodeToOp = {
+  49: "1",
+  50: "2",
+  51: "3",
+  52: "4",
+  53: "5",
+  54: "6",
+  55: "7",
+  56: "8",
+  57: "9",
+  190: ".",
+  8: "backspace",
+};
 window.addEventListener("keydown", (e) => {
-  if (e.keyCode === 48) {
-    calculatorDisplay("zero");
-  } else if (e.keyCode === 49) {
-    calculatorDisplay("one");
-  } else if (e.keyCode === 50) {
-    calculatorDisplay("two");
-  } else if (e.keyCode === 51) {
-    calculatorDisplay("three");
-  } else if (e.keyCode === 52) {
-    calculatorDisplay("four");
-  } else if (e.keyCode === 53) {
-    calculatorDisplay("five");
-  } else if (e.keyCode === 54) {
-    calculatorDisplay("six");
-  } else if (e.keyCode === 55) {
-    calculatorDisplay("seven");
-  } else if (e.keyCode === 56) {
-    calculatorDisplay("eight");
-  } else if (e.keyCode === 57) {
-    calculatorDisplay("nine");
-  } else if (e.keyCode === 190) {
-    calculatorDisplay("decimal");
-  } else if (e.keyCode === 8) {
-    calculatorDisplay("undo");
-  }
+  calculatorDisplay(keyCodeToOp[e.keyCode]);
 });
 
 function removeZeros(str) {
@@ -78,16 +67,11 @@ let firstNum = "";
 let secondNum = "";
 let operator;
 let output;
-let decimalCount = 0;
+let decimalCount = true;
 
 function calculatorDisplay(value) {
-  function getData(value) {
-    if (
-      operator === "subtract" ||
-      operator === "add" ||
-      operator === "multiply" ||
-      operator === "divide"
-    ) {
+  function addDigit(value) {
+    if (operator) {
       if (secondNum === "" && value === ".") {
         secondNum = "0";
       }
@@ -111,94 +95,68 @@ function calculatorDisplay(value) {
   }
 
   function calculate() {
-    if (secondNum) {
-      output = operate(operator, Number(firstNum), Number(secondNum));
-      display.innerHTML = output;
-      firstNum = output.toString();
-      secondNum = "";
-    }
-    decimalCount = 0;
-  }
-
-  switch (value) {
-    case "zero":
-      getData("0");
-      break;
-    case "one":
-      getData("1");
-      break;
-    case "two":
-      getData("2");
-      break;
-    case "three":
-      getData("3");
-      break;
-    case "four":
-      getData("4");
-      break;
-    case "five":
-      getData("5");
-      break;
-    case "six":
-      getData("6");
-      break;
-    case "seven":
-      getData("7");
-      break;
-    case "eight":
-      getData("8");
-      break;
-    case "nine":
-      getData("9");
-      break;
-    case "decimal":
-      if (decimalCount === 0) {
-        getData(".");
-        decimalCount++;
+    try {
+      if (secondNum) {
+        output = operate(operator, Number(firstNum), Number(secondNum));
+        display.innerHTML = output;
+        firstNum = output.toString();
+        secondNum = "";
       }
-
-      break;
-    case "clear":
-      display.innerHTML = "0";
+      decimalCount = true;
+    } catch (err) {
+      display.innerHTML = "Error";
       firstNum = "";
       secondNum = "";
       operator = undefined;
-      decimalCount = 0;
-      break;
-    case "undo":
-      display.innerHTML = display.innerHTML.slice(0, -1);
-      if (
-        operator === "subtract" ||
-        operator === "add" ||
-        operator === "multiply" ||
-        operator === "divide"
-      ) {
-        secondNum = secondNum.slice(0, -1);
-      } else {
-        firstNum = firstNum.slice(0, -1);
-      }
-      if (display.innerHTML.endsWith(".")) {
-        decimalCount = 0;
-      }
-      break;
-    case "minus":
-      calculate(operator);
-      operator = "subtract";
-      break;
-    case "plus":
-      calculate(operator);
-      operator = "add";
-      break;
-    case "times":
-      calculate(operator);
-      operator = "multiply";
-      break;
-    case "divide":
-      calculate(operator);
-      operator = "divide";
-      break;
-    case "equals":
-      calculate();
-      break;
+    }
+  }
+
+  if (value.match(/^[0-9.]$/)) {
+    if (value === "." && decimalCount) {
+      decimalCount = false;
+      addDigit(value);
+    } else if (value !== ".") {
+      addDigit(value);
+    }
+  } else {
+    switch (value) {
+      case "C":
+        display.innerHTML = "0";
+        firstNum = "";
+        secondNum = "";
+        operator = undefined;
+        decimalCount = true;
+        break;
+      case "backspace":
+        if (display.innerHTML.endsWith(".")) {
+          decimalCount = true;
+        }
+        display.innerHTML = display.innerHTML.slice(0, -1);
+        if (operator) {
+          secondNum = secondNum.slice(0, -1);
+        } else {
+          firstNum = firstNum.slice(0, -1);
+        }
+        break;
+      case "-":
+        calculate(operator);
+        operator = "subtract";
+        break;
+      case "+":
+        calculate(operator);
+        operator = "add";
+        break;
+      case "x":
+        calculate(operator);
+        operator = "multiply";
+        break;
+      case "÷":
+        calculate(operator);
+        operator = "divide";
+        break;
+      case "=":
+        calculate();
+        break;
+    }
   }
 }
