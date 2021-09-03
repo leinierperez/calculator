@@ -72,10 +72,12 @@ let decimalCount = true;
 function calculatorDisplay(value) {
   function addDigit(value) {
     if (operator) {
+      if (secondNum.length !== 11) {
+        secondNum += value;
+      }
       if (secondNum === '' && value === '.') {
         secondNum = '0';
       }
-      secondNum += value;
       if (value === '.') {
         display.innerHTML = secondNum;
       } else {
@@ -85,7 +87,9 @@ function calculatorDisplay(value) {
       if (firstNum === '' && value === '.') {
         firstNum = '0';
       }
-      firstNum += value;
+      if (display.innerHTML.length !== 11) {
+        firstNum += value;
+      }
       if (value === '.') {
         display.innerHTML = firstNum;
       } else {
