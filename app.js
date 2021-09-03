@@ -127,9 +127,13 @@ function calculatorDisplay(value) {
         operator = undefined;
         decimalCount = true;
         break;
-      case 'backspace':
+      case 'del':
         if (display.innerHTML.endsWith('.')) {
           decimalCount = true;
+        }
+        if (display.innerHTML.length === 1) {
+          display.innerHTML = '0';
+          break;
         }
         display.innerHTML = display.innerHTML.slice(0, -1);
         if (operator) {
